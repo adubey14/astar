@@ -201,13 +201,13 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
                 if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y))
                 {
                     free(backwardPath);
-                    printf("found origin on both forward and backward");
+                    //printf("found origin on both forward and backward");
                     return forwardPath;
                 }
 
                 // we have to merge them.
                 // bool trigger = true;
-                printf("merging forward and backward");
+                //printf("merging forward and backward");
                 while (prev != NULL)
                 {
 
@@ -313,12 +313,12 @@ search_result *printPath(Path *path)
         return results;
     Cell *current = path->current;
     Cell *prev = NULL;
-    printf("Path: ");
+    //printf("Path: ");
     results = (search_result *)malloc(sizeof(search_result) * (path->length));
     int count = 0;
     while (current != NULL)
     {
-        printf("(%d,%d) ", current->x, current->y);
+        //printf("(%d,%d) ", current->x, current->y);
         results[count].x = current->x;
         results[count].y = current->y;
         count = count + 1;
@@ -329,10 +329,17 @@ search_result *printPath(Path *path)
     return results;
 }
 
-search_result *find_path(int matrix[N][N], Cell start, Cell dest, int *path_length)
+search_result *find_path(int start_x, int start_y, int dest_x, int dest_y, int *path_length)
 {
-    if (start.x >= 0 && start.y < N && dest.x >= 0 && dest.y < N)
+    
+    if (start_x >= 0 && start_y < N && dest_x >= 0 && dest_y < N)
     {
+        Cell start;
+        Cell dest;
+        start.x=start_x;
+        start.y=start_y;
+        dest.x=dest_x;
+        dest.y=dest_y;
         Allocated_cells *allocated_cell_head = NULL;
         Allocated_cells *allocated_cell_current = NULL;
         if (path_length != NULL)
@@ -358,9 +365,37 @@ search_result *find_path(int matrix[N][N], Cell start, Cell dest, int *path_leng
     else
     {
         // invalid configuration
-        printf("invalid start or dest. Check ranges \n");
+        printf("invalid start or dest. Check ranges please. \n");
         return NULL;
     }
 }
 
+//replace this code with something custom to read data once from a file.
+void load_matrix()
+{
+    matrix[3][1] = 2;       // use 2 to denote obstacle
+    matrix[3][0] = 2;
+    matrix[4][0] = 2;
+    matrix[4][1] = 2;
+    matrix[9][0] = 2;
+    matrix[5][4] = 2;
+    matrix[5][3] = 2;
+    matrix[4][4] = 2;
+    matrix[4][5] = 2;
+    matrix[4][3] = 2;
+    matrix[4][6] = 2;
+    matrix[4][7] = 2;
+    matrix[6][1] = 2;
+    matrix[6][4] = 2;
+    matrix[6][5] = 2;
+    matrix[10][1] = 2;
+    matrix[0][98] = 2;
+    matrix[1][98] = 2;
+    matrix[1][99] = 2;
+    matrix[1][100] = 2;
+    matrix[199][299] = 2;
+    //matrix[0][100] = 2; // uncomment this to check that code reacts to max step bound
 
+
+}
+ 

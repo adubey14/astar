@@ -31,6 +31,8 @@ typedef struct
     struct Allocated_cells *next;
 } Allocated_cells;
 
-search_result *find_path(int matrix[N][N], Cell start, Cell dest, int *path_length);
+int matrix[N][N]={0};
 
+search_result *find_path(int start_x, int start_y, int dest_x, int dest_y, int *path_length);
+void load_matrix();
 #endif

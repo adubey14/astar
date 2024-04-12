@@ -5,10 +5,8 @@
 #include <math.h>
 #include "search.h"
 
-int main()
+void load_matrix()
 {
-
-    int matrix[N][N] = {0}; // Initialize matrix with all zeroes (no obstacles)
     matrix[3][1] = 2;       // use 2 to denote obstacle
     matrix[3][0] = 2;
     matrix[4][0] = 2;
@@ -29,12 +27,23 @@ int main()
     matrix[1][98] = 2;
     matrix[1][99] = 2;
     matrix[1][100] = 2;
+    matrix[199][299] = 2;
     //matrix[0][100] = 2; // uncomment this to check that code reacts to max step bound
 
+
+}
+ 
+    
+int main()
+{
+
+    load_matrix();
+
     Cell start = {0, 0};
-    Cell dest = {0, 99};
+    int start_x=0; int start_y=0;
+    int dest_x=0;int dest_y= 99;
     int path_length = 0;
-    search_result *results = find_path(matrix, start, dest, &path_length);
+    search_result *results = find_path(start_x,start_y, dest_x,dest_y, &path_length);
     if (results != NULL && path_length > 0)
     {
         for (int i = 0; i < path_length; i++)
