@@ -82,7 +82,7 @@ Path *reconstructPath(Cell *start, Cell *end)
 }
 
 // Function to perform A* search algorithm
-Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr)
+Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr, int RETURN_FORWARD_ONLY)
 {
     bool visitedForward[N][N] = {false};
     bool visitedBackward[N][N] = {false};
@@ -198,7 +198,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
                 forwardPath->current = prev;
                 prev = forwardPath->current;
                 // if both paths are same because they both found the full answer then return one.
-                if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y))
+                if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y) || RETURN_FORWARD_ONLY)
                 {
                     free(backwardPath);
                     //printf("found origin on both forward and backward");
@@ -329,7 +329,7 @@ search_result *convertPathToResultArray(Path *path)
     return results;
 }
 
-search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x, int dest_y, int *path_length)
+search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x, int dest_y, int *path_length,int RETURN_FORWARD_ONLY)
 {
     
     if (start_x >= 0 && start_y < N && dest_x >= 0 && dest_y < N)
@@ -345,7 +345,7 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
         if (path_length != NULL)
             *path_length = 0;
 
-        Path *path = biDirectionalAstar(matrix, &start, &dest, &allocated_cell_head, &allocated_cell_current);
+        Path *path = biDirectionalAstar(matrix, &start, &dest, &allocated_cell_head, &allocated_cell_current,RETURN_FORWARD_ONLY);
         if (path != NULL)
         {
             search_result *results = convertPathToResultArray(path);
