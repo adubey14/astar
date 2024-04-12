@@ -103,7 +103,7 @@ Path *reconstructPath(Cell *start, Cell *end)
 }
 
 // Function to perform A* search algorithm
-Path *aStarSearch(int matrix[N][N], Cell *start, Cell *dest)
+Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
 {
     bool visitedForward[N][N] = {false};
     bool visitedBackward[N][N] = {false};
@@ -192,14 +192,11 @@ Path *aStarSearch(int matrix[N][N], Cell *start, Cell *dest)
             {
                 // If so, reconstruct and return the path
                 Path *forwardPath = reconstructPath(start, currentForward);
-                // printf("%d;%d\n",forwardPath->current->x,forwardPath->current->y);
                 Path *backwardPath = reconstructPath(dest, currentBackward);
-                // printf("%d;%d\n",backwardPath->current->x,backwardPath->current->y);
-
                 Cell *prev = backwardPath->current;
-
                 Cell *current = forwardPath->current;
                 prev = NULL;
+                //reverse the path for forward
                 while (current != NULL)
                 {
                     Cell *next = current->parent;
@@ -209,36 +206,34 @@ Path *aStarSearch(int matrix[N][N], Cell *start, Cell *dest)
                 }
                 forwardPath->current = prev;
                 prev = forwardPath->current;
-                bool trigger = true;
+                // if both paths are same because they both found the full answer then return one.                
+                if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y))
+                {
+                    free(backwardPath);  
+                    printf("found origin on both forward and backward");                 
+                    return forwardPath;
+                }
+
+                //we have to merge them.
+               // bool trigger = true;
+                printf("merging forward and backward"); 
                 while (prev != NULL)
                 {
-                    if (prev->parent == NULL && trigger)
+                    
+                    if (prev->parent == NULL)
                     {
                         Cell *temp = backwardPath->current;
-                        while (temp->x == prev->x && temp->y == prev->y)
+                        while (temp != NULL && (temp->x == prev->x && temp->y == prev->y))
                         {
                             temp = temp->parent;
-                            backwardPath->length = backwardPath->length - 1;
+                            backwardPath->length = backwardPath->length - 1;                            
                         }
 
                         prev->parent = temp;
-                        trigger = false;
+                        break;                       
                     }
                     prev = prev->parent;
                 }
-
-                // prev = forwardPath->current;
-                // if (prev->x==backwardPath->current->x && prev->y==backwardPath->current->y){
-                //     prev=prev->parent;
-                // }
-
-                // Cell* current = prev->parent;
-                // while (current != NULL) {
-                //     current->parent = prev;
-                //     prev = current;
-                //     current = current->parent;
-                // }
-                // forwardPath->current->parent = prev;
                 forwardPath->length = forwardPath->length + backwardPath->length;
                 free(backwardPath);
                 return forwardPath;
@@ -351,10 +346,11 @@ int main()
     matrix[6][4] = 2;
     matrix[6][5] = 2;
     matrix[10][1] = 2;
-    Cell start = {0, 0};
-    Cell dest = {4, 4}; // Set the destination to the bottom-right corner
 
-    Path *path = aStarSearch(matrix, &start, &dest);
+    Cell start = {0, 0};
+    Cell dest = {40, 40}; 
+    
+    Path *path = biDirectionalAstar(matrix, &start, &dest);
     if (path != NULL)
     {
         printPath(path);
