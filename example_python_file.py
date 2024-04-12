@@ -47,7 +47,7 @@ for i in range(NUM_LOCATIONS):
     result_ptr = path_finder.find_path(matrix_arr_c,random_start[i][0], random_start[i][1], random_end[i][0], random_end[i][1], ctypes.byref(path_length))
     if path_length.value >0:
         path = [result_ptr[i] for i in range(path_length.value)]
-        print(f'#{i}:({random_start[i][0]},{random_start[i][0]})->({random_end[i][0]},{random_end[i][0]}) length {path_length.value}',end="; ")
+        #print(f'#{i}:({random_start[i][0]},{random_start[i][0]})->({random_end[i][0]},{random_end[i][0]}) length {path_length.value}',end="; ")
         #for i, point in enumerate(path):
             #print(f"{i+1}:({point.x},{point.y})",end="; ")
     else:
