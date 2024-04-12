@@ -26,10 +26,10 @@ void load_matrix()
     matrix_main_test[6][4] = 2;
     matrix_main_test[6][5] = 2;
     matrix_main_test[10][1] = 2;
-    matrix_main_test[0][98] = 2;
-    matrix_main_test[1][98] = 2;
-    matrix_main_test[1][99] = 2;
-    matrix_main_test[1][100] = 2;
+//    matrix_main_test[0][98] = 2;
+  //  matrix_main_test[1][98] = 2;
+   // matrix_main_test[1][99] = 2;
+    //matrix_main_test[1][100] = 2;
    // matrix_main_test[0][100] = 2; // uncomment this to check that code reacts to max step bound
 }
     
@@ -40,7 +40,7 @@ int main()
 
     Cell start = {0, 0};
     int start_x=0; int start_y=0;
-    int dest_x=0;int dest_y= 99;
+    int dest_x=0;int dest_y= 19;
     int path_length = 0;
     search_result *results = find_path(matrix_main_test,start_x,start_y, dest_x,dest_y, &path_length);
     if (results != NULL && path_length > 0)

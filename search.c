@@ -328,6 +328,14 @@ search_result *convertPathToResultArray(Path *path)
 
 search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x, int dest_y, int *path_length)
 {
+    if(start_x == dest_x && start_y==dest_y)
+    {
+	    *path_length=1;
+	    search_result* results = (search_result *)malloc(sizeof(search_result) * (1));
+	    results[0].x=start_x;
+	    results[0].y=start_y;
+	    return results;
+    }
     
     if (start_x >= 0 && start_y < N && dest_x >= 0 && dest_y < N)
     {

@@ -1,7 +1,7 @@
 #ifndef __SEARCH_H
 #define __SEARCH_H
 
-#define N 400
+#define N 20//400
 // making sure we dont run forever
 #define MaxSteps 100000
 typedef struct
