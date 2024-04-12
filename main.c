@@ -5,34 +5,33 @@
 #include <math.h>
 #include "search.h"
 
+int matrix_main_test[N][N]={0};
+
+//replace this code with something custom to read data once from a file.
 void load_matrix()
 {
-    matrix[3][1] = 2;       // use 2 to denote obstacle
-    matrix[3][0] = 2;
-    matrix[4][0] = 2;
-    matrix[4][1] = 2;
-    matrix[9][0] = 2;
-    matrix[5][4] = 2;
-    matrix[5][3] = 2;
-    matrix[4][4] = 2;
-    matrix[4][5] = 2;
-    matrix[4][3] = 2;
-    matrix[4][6] = 2;
-    matrix[4][7] = 2;
-    matrix[6][1] = 2;
-    matrix[6][4] = 2;
-    matrix[6][5] = 2;
-    matrix[10][1] = 2;
-    matrix[0][98] = 2;
-    matrix[1][98] = 2;
-    matrix[1][99] = 2;
-    matrix[1][100] = 2;
-    matrix[199][299] = 2;
-    //matrix[0][100] = 2; // uncomment this to check that code reacts to max step bound
-
-
+    matrix_main_test[3][1] = 2;       // use 2 to denote obstacle
+    matrix_main_test[3][0] = 2;
+    matrix_main_test[4][0] = 2;
+    matrix_main_test[4][1] = 2;
+    matrix_main_test[9][0] = 2;
+    matrix_main_test[5][4] = 2;
+    matrix_main_test[5][3] = 2;
+    matrix_main_test[4][4] = 2;
+    matrix_main_test[4][5] = 2;
+    matrix_main_test[4][3] = 2;
+    matrix_main_test[4][6] = 2;
+    matrix_main_test[4][7] = 2;
+    matrix_main_test[6][1] = 2;
+    matrix_main_test[6][4] = 2;
+    matrix_main_test[6][5] = 2;
+    matrix_main_test[10][1] = 2;
+    matrix_main_test[0][98] = 2;
+    matrix_main_test[1][98] = 2;
+    matrix_main_test[1][99] = 2;
+    matrix_main_test[1][100] = 2;
+    matrix_main_test[0][100] = 2; // uncomment this to check that code reacts to max step bound
 }
- 
     
 int main()
 {
@@ -43,7 +42,7 @@ int main()
     int start_x=0; int start_y=0;
     int dest_x=0;int dest_y= 99;
     int path_length = 0;
-    search_result *results = find_path(start_x,start_y, dest_x,dest_y, &path_length);
+    search_result *results = find_path(matrix_main_test,start_x,start_y, dest_x,dest_y, &path_length);
     if (results != NULL && path_length > 0)
     {
         for (int i = 0; i < path_length; i++)

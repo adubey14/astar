@@ -329,7 +329,7 @@ search_result *printPath(Path *path)
     return results;
 }
 
-search_result *find_path(int start_x, int start_y, int dest_x, int dest_y, int *path_length)
+search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x, int dest_y, int *path_length)
 {
     
     if (start_x >= 0 && start_y < N && dest_x >= 0 && dest_y < N)
@@ -370,32 +370,12 @@ search_result *find_path(int start_x, int start_y, int dest_x, int dest_y, int *
     }
 }
 
-//replace this code with something custom to read data once from a file.
-void load_matrix()
-{
-    matrix[3][1] = 2;       // use 2 to denote obstacle
-    matrix[3][0] = 2;
-    matrix[4][0] = 2;
-    matrix[4][1] = 2;
-    matrix[9][0] = 2;
-    matrix[5][4] = 2;
-    matrix[5][3] = 2;
-    matrix[4][4] = 2;
-    matrix[4][5] = 2;
-    matrix[4][3] = 2;
-    matrix[4][6] = 2;
-    matrix[4][7] = 2;
-    matrix[6][1] = 2;
-    matrix[6][4] = 2;
-    matrix[6][5] = 2;
-    matrix[10][1] = 2;
-    matrix[0][98] = 2;
-    matrix[1][98] = 2;
-    matrix[1][99] = 2;
-    matrix[1][100] = 2;
-    matrix[199][299] = 2;
-    //matrix[0][100] = 2; // uncomment this to check that code reacts to max step bound
 
 
+ void process_2d_array(int arr[][N], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("Element [%d][%d]: %d\n", i, j, arr[i][j]);
+        }
+    }
 }
- 
