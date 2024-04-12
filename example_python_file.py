@@ -3,7 +3,7 @@ import ctypes
 
 #configure
 # if on linux change this to .so which will be compiled for you.
-path_finder = ctypes.CDLL('liba_star_helper.dylib')
+path_finder = ctypes.CDLL('./liba_star_helper.so')
 class SearchResult(ctypes.Structure):
     _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
 path_finder.find_path.restype=ctypes.POINTER(SearchResult)
