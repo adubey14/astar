@@ -325,7 +325,7 @@ search_result *convertPathToResultArray(Path *path)
         prev = current;
         current = current->parent;
     }
-    printf("\nLength: %d\n", path->length);
+    //printf("\nLength: %d\n", path->length);
     return results;
 }
 
