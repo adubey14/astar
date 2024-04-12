@@ -13,6 +13,13 @@ typedef struct
     struct Cell *parent; // Parent cell
 } Cell;
 
+typedef struct
+{
+    int x;
+    int y;
+    /* data */
+} search_result;
+
 // A structure to hold the relevant data for the A* algorithm
 typedef struct
 {
@@ -26,11 +33,10 @@ typedef struct
     struct Allocated_cells *next;
 } Allocated_cells;
 
-Allocated_cells *allocated_cell_head = NULL;
-Allocated_cells *allocated_cell_current = NULL;
-
-Cell *allocate_cell()
+Cell *allocate_cell(Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr)
 {
+    Allocated_cells *allocated_cell_head = *allocated_cell_head_ptr;
+    Allocated_cells *allocated_cell_current = *allocated_cell_current_ptr;
     Cell *mycell = (Cell *)malloc(sizeof(Cell));
     Allocated_cells *alloccells = (Allocated_cells *)malloc(sizeof(Allocated_cells));
     alloccells->current = mycell;
@@ -48,7 +54,7 @@ Cell *allocate_cell()
     return mycell;
 }
 
-void free_allocated_cells()
+void free_allocated_cells(Allocated_cells *allocated_cell_head, Allocated_cells *allocated_cell_current)
 {
     if (allocated_cell_head == NULL)
         return;
@@ -103,7 +109,7 @@ Path *reconstructPath(Cell *start, Cell *end)
 }
 
 // Function to perform A* search algorithm
-Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
+Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr)
 {
     bool visitedForward[N][N] = {false};
     bool visitedBackward[N][N] = {false};
@@ -196,7 +202,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
                 Cell *prev = backwardPath->current;
                 Cell *current = forwardPath->current;
                 prev = NULL;
-                //reverse the path for forward
+                // reverse the path for forward
                 while (current != NULL)
                 {
                     Cell *next = current->parent;
@@ -206,31 +212,31 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
                 }
                 forwardPath->current = prev;
                 prev = forwardPath->current;
-                // if both paths are same because they both found the full answer then return one.                
+                // if both paths are same because they both found the full answer then return one.
                 if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y))
                 {
-                    free(backwardPath);  
-                    printf("found origin on both forward and backward");                 
+                    free(backwardPath);
+                    printf("found origin on both forward and backward");
                     return forwardPath;
                 }
 
-                //we have to merge them.
-               // bool trigger = true;
-                printf("merging forward and backward"); 
+                // we have to merge them.
+                // bool trigger = true;
+                printf("merging forward and backward");
                 while (prev != NULL)
                 {
-                    
+
                     if (prev->parent == NULL)
                     {
                         Cell *temp = backwardPath->current;
                         while (temp != NULL && (temp->x == prev->x && temp->y == prev->y))
                         {
                             temp = temp->parent;
-                            backwardPath->length = backwardPath->length - 1;                            
+                            backwardPath->length = backwardPath->length - 1;
                         }
 
                         prev->parent = temp;
-                        break;                       
+                        break;
                     }
                     prev = prev->parent;
                 }
@@ -258,7 +264,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
 
                         if (matrix[row][col] != 2)
                         { // Check for obstacle
-                            Cell *neighbor = allocate_cell();
+                            Cell *neighbor = allocate_cell(allocated_cell_head_ptr, allocated_cell_current_ptr);
                             neighbor->x = row;
                             neighbor->y = col;
                             neighbor->f = fNew;
@@ -292,7 +298,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
 
                         if (matrix[row][col] != 2)
                         { // Check for obstacle
-                            Cell *neighbor = allocate_cell();
+                            Cell *neighbor = allocate_cell(allocated_cell_head_ptr, allocated_cell_current_ptr);
                             neighbor->x = row;
                             neighbor->y = col;
                             neighbor->f = fNew;
@@ -313,24 +319,67 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
 }
 
 // Function to print the path
-void printPath(Path *path)
+search_result *printPath(Path *path)
 {
+    search_result *results = NULL;
+    if (path == NULL)
+        return results;
     Cell *current = path->current;
     Cell *prev = NULL;
     printf("Path: ");
+    results = (search_result *)malloc(sizeof(search_result) * (path->length));
+    int count = 0;
     while (current != NULL)
     {
         printf("(%d,%d) ", current->x, current->y);
+        results[count].x = current->x;
+        results[count].y = current->y;
+        count = count + 1;
         prev = current;
         current = current->parent;
     }
     printf("\nLength: %d\n", path->length);
+    return results;
+}
+
+search_result *find_path(int matrix[N][N], Cell start, Cell dest, int *path_length)
+{
+    if (start.x >= 0 && start.y < N && dest.x >= 0 && dest.y < N)
+    {
+        Allocated_cells *allocated_cell_head = NULL;
+        Allocated_cells *allocated_cell_current = NULL;
+        if (path_length != NULL)
+            *path_length = 0;
+
+        Path *path = biDirectionalAstar(matrix, &start, &dest, &allocated_cell_head, &allocated_cell_current);
+        if (path != NULL)
+        {
+            search_result *results = printPath(path);
+            *path_length = path->length;
+
+            free_allocated_cells(allocated_cell_head, allocated_cell_current);
+            free(path);
+            return results;
+        }
+        else
+        {
+            printf("No path found!\n");
+            return NULL;
+        }
+    }
+    else
+    {
+        //invalid configuration
+        printf("invalid start or dest. Check ranges \n");
+        return NULL;    
+    }
 }
 
 int main()
 {
+
     int matrix[N][N] = {0}; // Initialize matrix with all zeroes (no obstacles)
-    matrix[3][1] = 2;
+    matrix[3][1] = 2;       // use 2 to denote obstacle
     matrix[3][0] = 2;
     matrix[4][0] = 2;
     matrix[4][1] = 2;
@@ -348,21 +397,15 @@ int main()
     matrix[10][1] = 2;
 
     Cell start = {0, 0};
-    Cell dest = {40, 40}; 
-    
-    Path *path = biDirectionalAstar(matrix, &start, &dest);
-    if (path != NULL)
+    Cell dest = {398, 390};
+    int path_length = 0;
+    search_result *results = find_path(matrix, start, dest, &path_length);
+    if (results != NULL && path_length > 0)
     {
-        printPath(path);
-        free_allocated_cells();
-        free(path);
-
-        //  freePath(path);
+        for (int i = 0; i < path_length; i++)
+        {
+            printf("%d:(%d,%d)\n", i, results[i].x, results[i].y);
+        }
+        free(results); // we can just return this results to the python side.
     }
-    else
-    {
-        printf("No path found!\n");
-    }
-
-    return 0;
 }
