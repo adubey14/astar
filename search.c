@@ -306,7 +306,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
 }
 
 // Function to print the path
-search_result *printPath(Path *path)
+search_result *convertPathToResultArray(Path *path)
 {
     search_result *results = NULL;
     if (path == NULL)
@@ -348,7 +348,7 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
         Path *path = biDirectionalAstar(matrix, &start, &dest, &allocated_cell_head, &allocated_cell_current);
         if (path != NULL)
         {
-            search_result *results = printPath(path);
+            search_result *results = convertPathToResultArray(path);
             *path_length = path->length;
 
             free_allocated_cells(allocated_cell_head);
@@ -371,11 +371,3 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
 }
 
 
-
- void process_2d_array(int arr[][N], int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
-            printf("Element [%d][%d]: %d\n", i, j, arr[i][j]);
-        }
-    }
-}
