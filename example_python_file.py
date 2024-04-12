@@ -35,13 +35,13 @@ for i, subarr in enumerate(matrix_2d):
 
 #change startting and destination position
 start_x, start_y = 0, 0
-dest_x, dest_y = 2, 300
+dest_x, dest_y = 12, 12
 
 result_ptr = path_finder.find_path(matrix_arr_c,start_x, start_y, dest_x, dest_y, ctypes.byref(path_length))
 if path_length.value >0:
     path = [result_ptr[i] for i in range(path_length.value)]
     for i, point in enumerate(path):
-        print(f"step {i+1}: x={point.x}, y={point.y}")
+        print(f"{i+1}:({point.x},{point.y})",end="; ")
 else:
     print("path length is 0")
 
