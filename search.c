@@ -355,24 +355,13 @@ int main()
     Cell dest = {4, 4}; // Set the destination to the bottom-right corner
 
     Path *path = aStarSearch(matrix, &start, &dest);
-     if (path != NULL)
+    if (path != NULL)
     {
         printPath(path);
         free_allocated_cells();
         free(path);
 
         //  freePath(path);
-    }
-    else
-    {
-        printf("No path found!\n");
-    }
-    path = aStarSearch(matrix, &start, &dest);
-    if (path != NULL)
-    {
-        printPath(path);
-        free_allocated_cells();
-        free(path);
     }
     else
     {
