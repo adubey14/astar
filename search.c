@@ -4,8 +4,8 @@
 #include <math.h>
 
 #define N 400
-//making sure we dont run forever
-#define MaxSteps 100000 
+// making sure we dont run forever
+#define MaxSteps 100000
 // Structure to represent a cell in the matrix
 typedef struct
 {
@@ -155,7 +155,6 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
         while (openListForwardSize > 0 && openListBackwardSize > 0)
         {
 
-            printf("%d\n", numberOfSteps);
             if (numberOfSteps > MaxSteps)
             {
                 return NULL;
@@ -416,7 +415,7 @@ int main()
     matrix[1][98] = 2;
     matrix[1][99] = 2;
     matrix[1][100] = 2;
-    //matrix[0][100] = 2; //uncomment this to check that code reacts to max step bound
+    // matrix[0][100] = 2; //uncomment this to check that code reacts to max step bound
 
     Cell start = {0, 0};
     Cell dest = {0, 99};
