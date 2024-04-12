@@ -42,7 +42,7 @@ int main()
     int start_x=0; int start_y=0;
     int dest_x=0;int dest_y= 99;
     int path_length = 0;
-    search_result *results = find_path(matrix_main_test,start_x,start_y, dest_x,dest_y, &path_length,1);//1 is return_forward only
+    search_result *results = find_path(matrix_main_test,start_x,start_y, dest_x,dest_y, &path_length);
     if (results != NULL && path_length > 0)
     {
         for (int i = 0; i < path_length; i++)

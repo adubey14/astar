@@ -23,7 +23,7 @@ path_length = ctypes.c_int()
 matrix_2d = [[0] * N for _ in range(N)] #all zeros initially.
 
 #define obstacles
-matrix_2d[2][2]=0
+matrix_2d[2][2]=2
 matrix_2d[1][2]=2
 
 # Convert the Python list of lists to a ctypes array of arrays
@@ -35,9 +35,9 @@ for i, subarr in enumerate(matrix_2d):
 
 #change startting and destination position
 start_x, start_y = 0, 0
-dest_x, dest_y = 15, 15
+dest_x, dest_y = 2, 300
 
-result_ptr = path_finder.find_path(matrix_arr_c,start_x, start_y, dest_x, dest_y, ctypes.byref(path_length),0) # use 1 to only get forward path
+result_ptr = path_finder.find_path(matrix_arr_c,start_x, start_y, dest_x, dest_y, ctypes.byref(path_length))
 if path_length.value >0:
     path = [result_ptr[i] for i in range(path_length.value)]
     for i, point in enumerate(path):
