@@ -4,7 +4,8 @@
 #include <math.h>
 
 #define N 400
-
+//making sure we dont run forever
+#define MaxSteps 100000 
 // Structure to represent a cell in the matrix
 typedef struct
 {
@@ -54,7 +55,7 @@ Cell *allocate_cell(Allocated_cells **allocated_cell_head_ptr, Allocated_cells *
     return mycell;
 }
 
-void free_allocated_cells(Allocated_cells *allocated_cell_head, Allocated_cells *allocated_cell_current)
+void free_allocated_cells(Allocated_cells *allocated_cell_head)
 {
     if (allocated_cell_head == NULL)
         return;
@@ -124,11 +125,17 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
     dest->h = 0;
     dest->parent = NULL;
 
+    int numberOfSteps = 0;
+
     while (!isDestination(start->x, start->y, dest) && !isDestination(dest->x, dest->y, start))
     {
         // Forward A* search
         // Start with the start cell
         Cell *currentForward = start;
+        if (numberOfSteps > MaxSteps)
+        {
+            return NULL;
+        }
 
         // Initialize the forward open list with the start cell
         Cell *openListForward[N * N];
@@ -147,6 +154,13 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
         // Loop until a path is found or both searches have nowhere else to go
         while (openListForwardSize > 0 && openListBackwardSize > 0)
         {
+
+            printf("%d\n", numberOfSteps);
+            if (numberOfSteps > MaxSteps)
+            {
+                return NULL;
+            }
+
             // Forward A* search
             // Choose the cell with the lowest f value from the forward open list
             currentForward = openListForward[0];
@@ -274,6 +288,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
 
                             // Add the neighbor to the open list
                             openListForward[openListForwardSize++] = neighbor;
+                            numberOfSteps = numberOfSteps + 1;
                         }
                     }
                 }
@@ -308,6 +323,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
 
                             // Add the neighbor to the open list
                             openListBackward[openListBackwardSize++] = neighbor;
+                            numberOfSteps = numberOfSteps + 1;
                         }
                     }
                 }
@@ -357,21 +373,22 @@ search_result *find_path(int matrix[N][N], Cell start, Cell dest, int *path_leng
             search_result *results = printPath(path);
             *path_length = path->length;
 
-            free_allocated_cells(allocated_cell_head, allocated_cell_current);
+            free_allocated_cells(allocated_cell_head);
             free(path);
             return results;
         }
         else
         {
+            free_allocated_cells(allocated_cell_head);
             printf("No path found!\n");
             return NULL;
         }
     }
     else
     {
-        //invalid configuration
+        // invalid configuration
         printf("invalid start or dest. Check ranges \n");
-        return NULL;    
+        return NULL;
     }
 }
 
@@ -395,9 +412,14 @@ int main()
     matrix[6][4] = 2;
     matrix[6][5] = 2;
     matrix[10][1] = 2;
+    matrix[0][98] = 2;
+    matrix[1][98] = 2;
+    matrix[1][99] = 2;
+    matrix[1][100] = 2;
+    //matrix[0][100] = 2; //uncomment this to check that code reacts to max step bound
 
     Cell start = {0, 0};
-    Cell dest = {398, 390};
+    Cell dest = {0, 99};
     int path_length = 0;
     search_result *results = find_path(matrix, start, dest, &path_length);
     if (results != NULL && path_length > 0)
