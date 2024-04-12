@@ -6,25 +6,22 @@
 
 // Structure to represent a cell in the matrix
 
-Cell *allocate_cell(Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr)
+Cell cell_stack[MaxSteps+1];
+int next_empty_cell=0;
+
+Cell *allocate_cell()
 {
-    Allocated_cells *allocated_cell_head = *allocated_cell_head_ptr;
-    Allocated_cells *allocated_cell_current = *allocated_cell_current_ptr;
-    Cell *mycell = (Cell *)malloc(sizeof(Cell));
-    Allocated_cells *alloccells = (Allocated_cells *)malloc(sizeof(Allocated_cells));
-    alloccells->current = mycell;
-    alloccells->next = NULL;
-    if (allocated_cell_head == NULL)
+    if (next_empty_cell<MaxSteps+1)
     {
-        allocated_cell_head = alloccells;
-        allocated_cell_current = allocated_cell_head;
+         Cell *mycell = &(cell_stack[next_empty_cell]);
+         next_empty_cell=next_empty_cell+1;
+        return mycell;
     }
     else
     {
-        allocated_cell_current->next = alloccells;
-        allocated_cell_current = alloccells;
+        return NULL;
+
     }
-    return mycell;
 }
 
 void free_allocated_cells(Allocated_cells *allocated_cell_head)
@@ -82,7 +79,7 @@ Path *reconstructPath(Cell *start, Cell *end)
 }
 
 // Function to perform A* search algorithm
-Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_cells **allocated_cell_head_ptr, Allocated_cells **allocated_cell_current_ptr)
+Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
 {
     bool visitedForward[N][N] = {false};
     bool visitedBackward[N][N] = {false};
@@ -249,7 +246,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
 
                         if (matrix[row][col] != 2)
                         { // Check for obstacle
-                            Cell *neighbor = allocate_cell(allocated_cell_head_ptr, allocated_cell_current_ptr);
+                            Cell *neighbor = allocate_cell();
                             neighbor->x = row;
                             neighbor->y = col;
                             neighbor->f = fNew;
@@ -284,7 +281,7 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest, Allocated_ce
 
                         if (matrix[row][col] != 2)
                         { // Check for obstacle
-                            Cell *neighbor = allocate_cell(allocated_cell_head_ptr, allocated_cell_current_ptr);
+                            Cell *neighbor = allocate_cell();
                             neighbor->x = row;
                             neighbor->y = col;
                             neighbor->f = fNew;
@@ -345,7 +342,7 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
         if (path_length != NULL)
             *path_length = 0;
 
-        Path *path = biDirectionalAstar(matrix, &start, &dest, &allocated_cell_head, &allocated_cell_current);
+        Path *path = biDirectionalAstar(matrix, &start, &dest);
         if (path != NULL)
         {
             search_result *results = convertPathToResultArray(path);
@@ -353,12 +350,14 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
 
             free_allocated_cells(allocated_cell_head);
             free(path);
+            next_empty_cell=0;//reset stack
             return results;
         }
         else
         {
             free_allocated_cells(allocated_cell_head);
             printf("No path found!\n");
+            next_empty_cell=0;//reset stack
             return NULL;
         }
     }
@@ -366,6 +365,7 @@ search_result *find_path(int matrix[N][N], int start_x, int start_y, int dest_x,
     {
         // invalid configuration
         printf("invalid start or dest. Check ranges please. \n");
+        next_empty_cell=0;//reset stack
         return NULL;
     }
 }

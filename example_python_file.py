@@ -38,7 +38,7 @@ start_x, start_y = 0, 0
 dest_x, dest_y = 0, 1
 import random
 
-NUM_LOCATIONS=1000
+NUM_LOCATIONS=10000
 
 random_start = [(random.randint(0, N-1), random.randint(0, N-1)) for _ in range(NUM_LOCATIONS)]
 random_end = [(random.randint(0, N-1), random.randint(0, N-1)) for _ in range(NUM_LOCATIONS)]
@@ -47,7 +47,7 @@ for i in range(NUM_LOCATIONS):
     result_ptr = path_finder.find_path(matrix_arr_c,random_start[i][0], random_start[i][1], random_end[i][0], random_end[i][1], ctypes.byref(path_length))
     if path_length.value >0:
         path = [result_ptr[i] for i in range(path_length.value)]
-        print(f'{i}:{path_length.value}')
+        print(f'#{i}:({random_start[i][0]},{random_start[i][0]})->({random_end[i][0]},{random_end[i][0]}) length {path_length.value}',end="; ")
         #for i, point in enumerate(path):
             #print(f"{i+1}:({point.x},{point.y})",end="; ")
     else:
@@ -58,4 +58,4 @@ for i in range(NUM_LOCATIONS):
 # cmake .
 # make
 # time python example_python_file.py  
-# divide real answer by NUM_LOCATIONS which is 1000
+# divide real answer by NUM_LOCATIONS which is 10000
