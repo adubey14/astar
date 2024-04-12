@@ -1,6 +1,8 @@
 import ctypes
 import os
 
+N=400
+
 #configure
 # if on linux change this to .so which will be compiled for you.
 if os.path.exists('./liba_star_helper.dylib'):
@@ -18,14 +20,14 @@ path_length = ctypes.c_int()
 
 
 # Create a 2D array 
-matrix_2d = [[0] * 400 for _ in range(400)] #all zeros initially.
+matrix_2d = [[0] * N for _ in range(N)] #all zeros initially.
 
 #define obstacles
 matrix_2d[2][2]=2
 matrix_2d[1][2]=2
 
 # Convert the Python list of lists to a ctypes array of arrays
-matrix_arr_c_type = (ctypes.c_int * 400) * len(matrix_2d)
+matrix_arr_c_type = (ctypes.c_int * N) * len(matrix_2d)
 matrix_arr_c = matrix_arr_c_type()
 for i, subarr in enumerate(matrix_2d):
     matrix_arr_c[i] = (ctypes.c_int * len(subarr))(*subarr)
