@@ -10,3 +10,8 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 bidirectional_a_star
+a_star
+liba_star.a
+liba_star.dylib
+liba_star_helper.dylib
+.vscode/settings.json

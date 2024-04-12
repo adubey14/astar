@@ -3,5 +3,7 @@ project(a_star)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(bidirectional_a_star search.c)
+add_library(a_star_helper SHARED search.c)
+add_executable(a_star main.c)
 set(CMAKE_C_FLAGS "-Wno-incompatible-pointer-types")
+target_link_libraries(a_star a_star_helper)
