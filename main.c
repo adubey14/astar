@@ -30,7 +30,7 @@ void load_matrix()
     matrix_main_test[1][98] = 2;
     matrix_main_test[1][99] = 2;
     matrix_main_test[1][100] = 2;
-    matrix_main_test[0][100] = 2; // uncomment this to check that code reacts to max step bound
+   // matrix_main_test[0][100] = 2; // uncomment this to check that code reacts to max step bound
 }
     
 int main()

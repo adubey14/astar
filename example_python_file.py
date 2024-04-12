@@ -2,6 +2,7 @@ import ctypes
 
 
 #configure
+# if on linux change this to .so which will be compiled for you.
 path_finder = ctypes.CDLL('liba_star_helper.dylib')
 class SearchResult(ctypes.Structure):
     _fields_ = [("x", ctypes.c_int), ("y", ctypes.c_int)]
@@ -11,6 +12,8 @@ path_length = ctypes.c_int()
 
 # Create a 2D array 
 matrix_2d = [[0] * 400 for _ in range(400)] #all zeros initially.
+
+#define obstacles
 matrix_2d[2][2]=2
 matrix_2d[1][2]=2
 
@@ -21,8 +24,9 @@ for i, subarr in enumerate(matrix_2d):
     matrix_arr_c[i] = (ctypes.c_int * len(subarr))(*subarr)
 
 
+#change startting and destination position
 start_x, start_y = 0, 0
-dest_x, dest_y = 2, 3
+dest_x, dest_y = 2, 300
 
 result_ptr = path_finder.find_path(matrix_arr_c,start_x, start_y, dest_x, dest_y, ctypes.byref(path_length))
 if path_length.value >0:
