@@ -10,22 +10,22 @@ int matrix_main_test[N][N]={0};
 //replace this code with something custom to read data once from a file.
 void load_matrix()
 {
-    matrix_main_test[3][1] = 2;       // use 2 to denote obstacle
-    matrix_main_test[3][0] = 2;
-    matrix_main_test[4][0] = 2;
-    matrix_main_test[4][1] = 2;
-    matrix_main_test[9][0] = 2;
-    matrix_main_test[5][4] = 2;
-    matrix_main_test[5][3] = 2;
-    matrix_main_test[4][4] = 2;
-    matrix_main_test[4][5] = 2;
-    matrix_main_test[4][3] = 2;
-    matrix_main_test[4][6] = 2;
-    matrix_main_test[4][7] = 2;
-    matrix_main_test[6][1] = 2;
-    matrix_main_test[6][4] = 2;
-    matrix_main_test[6][5] = 2;
-    matrix_main_test[10][1] = 2;
+    // matrix_main_test[3][1] = 2;       // use 2 to denote obstacle
+    // matrix_main_test[3][0] = 2;
+    // matrix_main_test[4][0] = 2;
+    // matrix_main_test[4][1] = 2;
+    // matrix_main_test[9][0] = 2;
+    // matrix_main_test[5][4] = 2;
+    // matrix_main_test[5][3] = 2;
+    // matrix_main_test[4][4] = 2;
+    // matrix_main_test[4][5] = 2;
+    // matrix_main_test[4][3] = 2;
+    // matrix_main_test[4][6] = 2;
+    // matrix_main_test[4][7] = 2;
+    // matrix_main_test[6][1] = 2;
+    // matrix_main_test[6][4] = 2;
+    // matrix_main_test[6][5] = 2;
+    // matrix_main_test[10][1] = 2;
 //    matrix_main_test[0][98] = 2;
   //  matrix_main_test[1][98] = 2;
    // matrix_main_test[1][99] = 2;
@@ -40,7 +40,7 @@ int main()
 
     Cell start = {0, 0};
     int start_x=0; int start_y=0;
-    int dest_x=0;int dest_y= 19;
+    int dest_x=15;int dest_y= 19;
     int path_length = 0;
     search_result *results = find_path(matrix_main_test,start_x,start_y, dest_x,dest_y, &path_length);
     if (results != NULL && path_length > 0)

@@ -193,7 +193,25 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
                     current = next;
                 }
                 forwardPath->current = prev;
-                prev = forwardPath->current;
+                current = forwardPath->current;
+                while (current != NULL)
+                {
+                    Cell *next = current->parent;
+                    printf("forward %d;%d\n",current->x,current->y);
+                    current = next;
+
+                }
+
+                current = backwardPath->current;
+                printf("head backward %d;%d\n",current->x,current->y);
+                while (current != NULL)
+                {
+                    Cell *next = current->parent;
+                    printf("backward %d;%d\n",current->x,current->y);
+                    current = next;
+
+                }
+
                 // if both paths are same because they both found the full answer then return one.
                 if ((prev->x == backwardPath->current->x) && (prev->y == backwardPath->current->y))
                 {
@@ -202,27 +220,45 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
                     return forwardPath;
                 }
 
-                // we have to merge them.
-                // bool trigger = true;
-                //printf("merging forward and backward");
-                while (prev != NULL)
+                current = forwardPath->current;
+                bool merged=false;
+                if (backwardPath->current !=NULL)
                 {
-
-                    if (prev->parent == NULL)
+                    while (current != NULL)
                     {
-                        Cell *temp = backwardPath->current;
-                        while (temp != NULL && (temp->x == prev->x && temp->y == prev->y))
+                        Cell *next = current->parent;                    
+                        //printf("forward %d;%d\n",current->x,current->y);
+                        if (next!=NULL)
                         {
-                            temp = temp->parent;
-                            backwardPath->length = backwardPath->length - 1;
+                            if (next->x==backwardPath->current->x && next->y==backwardPath->current->y)
+                            {
+                                current->parent=backwardPath->current;
+                                merged=true;
+                                break;
+                            }
                         }
+                        if(next==NULL)
+                        {
+                            current->parent=backwardPath->current;
 
-                        prev->parent = temp;
-                        break;
+                        }
+                        current = next;
+
                     }
-                    prev = prev->parent;
                 }
-                forwardPath->length = forwardPath->length + backwardPath->length;
+
+                current = forwardPath->current;
+                int i=0;
+                while (current != NULL)
+                {
+                    Cell *next = current->parent;
+                    printf("merged forward %d;%d\n",current->x,current->y);
+                    current = next;
+                    i=i+1;
+                }
+                
+   
+                forwardPath->length = i;
                 free(backwardPath);
                 return forwardPath;
             }
@@ -234,12 +270,19 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
                 {
                     if (i == 0 && j == 0)
                         continue;
+                    
+                    // if (i==j)
+                    //     continue;
+
+                    // if ((i==-1 && j==1) || (i==1 && j==-1))
+                    //     continue;
 
                     int row = currentForward->x + i;
                     int col = currentForward->y + j;
 
                     if (isValid(row, col, matrix, visitedForward))
                     {
+                        //printf("%d;%d\n",i,j);
                         double gNew = currentForward->g + 1.0; // Cost to move to the neighbor is 1
                         double hNew = calculateHValue(row, col, dest);
                         double fNew = gNew + hNew;
@@ -265,10 +308,19 @@ Path *biDirectionalAstar(int matrix[N][N], Cell *start, Cell *dest)
             // Explore neighbors in the backward direction
             for (int i = -1; i <= 1; ++i)
             {
+                
                 for (int j = -1; j <= 1; ++j)
                 {
                     if (i == 0 && j == 0)
                         continue;
+
+                        
+                    // if (i==j)
+                    //     continue;
+
+                    // if ((i==-1 && j==1) || (i==1 && j==-1))
+                    //     continue;
+
 
                     int row = currentBackward->x + i;
                     int col = currentBackward->y + j;
